@@ -1,18 +1,52 @@
-import React, { useContext} from 'react';
+import { useContext, useEffect, useState } from 'react';
+import Form from './Form';
 import NoteContext from '../context/notes-context';
 import useMousePosition from '../hooks/useMousePosition';
+
+import database from '../firebase/firebase';
 
 const Note = ({note})=> {
 
   const {dispatch} = useContext(NoteContext);
+  const [edit,setEdit] = useState(false)
   const position = useMousePosition();
 
+  const onRemove = () => {
+    database.ref(`notes/${note.key}`).remove()
+      .then(()=>dispatch({type: 'REMOVE_NOTE', id: note.id}))
+  }
+
+  async function updateNote ({title,body}) {
+
+    await database.ref(`notes/${note.key}`).set({...note, title, body})
+    dispatch({type: 'EDIT_NOTE', note:{title,body}, id: note.id})
+    
+    setEdit(false)
+  }
+  
+  const info=(
+    <div>
+          <h3> { note.title } </h3>
+          <p> { note.body } </p>
+          <p> {position.x} {position.y}</p>
+        </div>
+  )
     return (
       <div>
-        <h3> { note.title } </h3>
-        <p> { note.body } </p>
-        <p> {position.x} {position.y}</p>
-      <button onClick={()=>dispatch({type: 'REMOVE_NOTE', title: note.title})}>x</button>
+        {!edit ? info:
+          <Form 
+            data = {note} 
+            onSubmitForm={(e) => updateNote(e)}
+          /> 
+        }
+       
+      {note.id.length > 3 ? 
+        <>
+        <button onClick={onRemove}>x</button>
+        <button onClick={()=>setEdit(true)}>e</button> 
+        </>
+        : ''
+      }
     </div>
     )
   }

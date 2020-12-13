@@ -1,34 +1,33 @@
-import React, { useState, useContext } from 'react';
+import {useContext} from 'react';
+import Form from './Form';
 import NotesContext from '../context/notes-context';
 import useMousePosition from '../hooks/useMousePosition';
+import {uid} from 'uid';
 
+import database from '../firebase/firebase';
 
 const AddNoteForm = ()=>{
   
 const {dispatch} = useContext(NotesContext);
-const [title, setTitle] = useState('');
-const [body,setBody] = useState('');
 const position = useMousePosition();
+const id = uid();
 
-const addNote= (e)=>{
-    e.preventDefault();
-    dispatch({
-      type: 'ADD_NOTE', 
-      title, 
-      body
+const addNote= ({title,body})=>{
+
+    database.ref('notes').push({title, body, id}).then((ref)=>{
+      dispatch({
+        type: 'ADD_NOTE', 
+        title, 
+        body,
+        id,
+        key: ref.key
+      })
     })
-    setTitle('');
-    setBody('');
-  }
-
+}
    return (
        <>
             <p>Add Note {position.x} - {position.y}</p>
-            <form onSubmit={addNote} >
-                <input value={title} onChange = {(e)=>setTitle(e.target.value)}/>
-                <textarea value={body} onChange = {(e)=>setBody(e.target.value)}/>
-                <button>submit</button>
-           </form> 
+            <Form onSubmitForm={(e)=>addNote(e)}/>
        </>
    )
 }
