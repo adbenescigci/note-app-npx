@@ -1,5 +1,7 @@
 import {useEffect, useReducer} from 'react';
+import combineReducers from 'react-combine-reducers';
 import notesReducer from '../reducers/notes';
+import filterReducer from '../reducers/filter';
 import NoteList from './NoteList';
 import AddNoteForm from './AddNoteForm';
 import NotesContext from '../context/notes-context';
@@ -9,8 +11,16 @@ import database from '../firebase/firebase';
 import '../styles/styles.scss';
 
 const NoteApp = () => {
+  
+const initNotes = [];
+const initFilters = {text:'', date:0};
 
-const [notes,dispatch] = useReducer(notesReducer,[])
+const [reducer, initial] = combineReducers({
+  notes: [notesReducer, initNotes],
+  filters: [filterReducer, initFilters]
+});
+
+const [state, dispatch] = useReducer(reducer, initial);
 
 const initialNotes= () => {
   return database.ref('notes').once('value')
@@ -47,14 +57,22 @@ const notes = [...await personal, ...await ortak]
   
 } 
 
+const onSetText = (e)=>{
+  dispatch({type: 'SET_TEXT', text: e.target.value})
+}
+
+useEffect(()=>{
+},[state])
+
 useEffect(()=>{
   start()
 },[])
 
   return (
-    <NotesContext.Provider value = {{notes, dispatch}}>
+    <NotesContext.Provider value = {{state, dispatch}}>
       <AddNoteForm />
       <h1>Notes</h1>
+      <input value = {state.filters.text} onChange = {(e)=>onSetText(e)}/>
       <NoteList />
     </NotesContext.Provider>
   )
