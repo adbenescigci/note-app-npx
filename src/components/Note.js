@@ -26,9 +26,10 @@ const Note = ({note})=> {
   
   const info=(
     <div>
-          <h3> { note.title } </h3>
-          <p> { note.body } </p>
-          <p> {position.x} {position.y}</p>
+          <h3>Title: { note.title } </h3>
+          <p> Body:{ note.body } </p>
+          <p> Position: {position.x} {position.y}</p>
+          {note.timePre ===0 ? <p> DatePre:{ note.timePre }</p> : '' }
         </div>
   )
     return (

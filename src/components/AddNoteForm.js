@@ -11,16 +11,18 @@ const AddNoteForm = ()=>{
 const {dispatch} = useContext(NotesContext);
 const position = useMousePosition();
 const id = uid();
+const timePre = 0;
 
 const addNote= ({title,body})=>{
 
-    database.ref('notes').push({title, body, id}).then((ref)=>{
+    database.ref('notes').push({title, body, id, timePre}).then((ref)=>{
       dispatch({
         type: 'ADD_NOTE', 
         title, 
         body,
         id,
-        key: ref.key
+        key: ref.key,
+        timePre
       })
     })
 }

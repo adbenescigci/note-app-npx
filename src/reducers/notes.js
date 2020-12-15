@@ -6,7 +6,7 @@ const notesReducer = (state, action) => {
       case 'ADD_NOTE':
         return [
           ...state,
-          {title: action.title, body: action.body, id: action.id, key: action.key}
+          {title: action.title, body: action.body, id: action.id, key: action.key, timePre: action.timePre}
         ]
       case 'EDIT_NOTE':
         const stateNew = state.map((note)=>{

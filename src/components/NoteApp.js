@@ -30,7 +30,6 @@ const commonNotes = () => {
   return database.ref('ortak').once('value')
 }
 
-//Async Function with await
 async function start() {
   const notesOrtak= [];
   const notesPersonal= [];
