@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
+import { format,toDate } from 'date-fns'
 import Form from './Form';
 import NoteContext from '../context/notes-context';
 import useMousePosition from '../hooks/useMousePosition';
@@ -23,13 +24,15 @@ const Note = ({note})=> {
     
     setEdit(false)
   }
+
   
   const info=(
     <div>
           <h3>Title: { note.title } </h3>
           <p> Body:{ note.body } </p>
           <p> Position: {position.x} {position.y}</p>
-          {note.timePre ===0 ? <p> DatePre:{ note.timePre }</p> : '' }
+          {note.sDate? <p>StartDate: {format(toDate(note.sDate),'dd/MM/yyyy')}</p>: ''}
+          {note.sDate? <p>EndDate: {format(toDate(note.eDate),'dd/MM/yyyy')}</p>: ''}
         </div>
   )
     return (

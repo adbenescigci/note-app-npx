@@ -1,67 +1,24 @@
 import {useEffect, useReducer} from 'react';
-import combineReducers from 'react-combine-reducers';
-import notesReducer from '../reducers/notes';
-import filterReducer from '../reducers/filter';
-import NoteList from './NoteList';
-import AddNoteForm from './AddNoteForm';
+import { reducer, initial } from '../reducers/combineReducer';
 import NotesContext from '../context/notes-context';
-
-import database from '../firebase/firebase';
+import AddNoteForm from './AddNoteForm';
+import Search from './Search';
+import NoteList from './NoteList';
+import init from './init';
 
 import '../styles/styles.scss';
+import "react-datepicker/dist/react-datepicker.css";
 
 const NoteApp = () => {
-  
-const initNotes = [];
-const initFilters = {text:'', date:0};
-
-const [reducer, initial] = combineReducers({
-  notes: [notesReducer, initNotes],
-  filters: [filterReducer, initFilters]
-});
 
 const [state, dispatch] = useReducer(reducer, initial);
 
-const initialNotes= () => {
-  return database.ref('notes').once('value')
-}
-
-const commonNotes = () => {
-  return database.ref('ortak').once('value')
-}
-
-async function start() {
-  const notesOrtak= [];
-  const notesPersonal= [];
-
-  const ortak = commonNotes().then((snapshot)=>{
-    snapshot.forEach((child)=>{
-    notesOrtak.push({...child.val(), key: child.key})
-    })
-    return notesOrtak
-   }) ;
-   
-  const personal = initialNotes().then((snapshot)=>{
-    snapshot.forEach((child)=>{
-    notesPersonal.push({...child.val(), key: child.key})
-    }) 
-    return notesPersonal
-  });
-
-const notes = [...await personal, ...await ortak] 
-
+async function start () {
+const notes = await init()
   if(notes) {
     dispatch({type: 'POPULATE_NOTES', notes})
   }
-  
 } 
-
-const onSetText = (e)=>{
-  dispatch({type: 'SET_TEXT', text: e.target.value})
-}
-
-useEffect(()=>{
-},[state])
 
 useEffect(()=>{
   start()
@@ -71,7 +28,7 @@ useEffect(()=>{
     <NotesContext.Provider value = {{state, dispatch}}>
       <AddNoteForm />
       <h1>Notes</h1>
-      <input value = {state.filters.text} onChange = {(e)=>onSetText(e)}/>
+      <Search/>
       <NoteList />
     </NotesContext.Provider>
   )

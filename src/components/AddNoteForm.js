@@ -1,8 +1,8 @@
 import {useContext} from 'react';
+import {uid} from 'uid';
 import Form from './Form';
 import NotesContext from '../context/notes-context';
 import useMousePosition from '../hooks/useMousePosition';
-import {uid} from 'uid';
 
 import database from '../firebase/firebase';
 
@@ -11,18 +11,19 @@ const AddNoteForm = ()=>{
 const {dispatch} = useContext(NotesContext);
 const position = useMousePosition();
 const id = uid();
-const timePre = 0;
 
-const addNote= ({title,body})=>{
+const addNote= ({title,body,sDate,eDate})=>{
+  console.log({title}, sDate,eDate )
 
-    database.ref('notes').push({title, body, id, timePre}).then((ref)=>{
+    database.ref('notes').push({title, body, id, sDate,eDate}).then((ref)=>{
       dispatch({
-        type: 'ADD_NOTE', 
+        type: 'ADD_NOTE',
         title, 
         body,
         id,
         key: ref.key,
-        timePre
+        sDate,
+        eDate
       })
     })
 }
