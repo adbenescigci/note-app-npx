@@ -43,7 +43,6 @@ const Note = ({note})=> {
             onSubmitForm={(e) => updateNote(e)}
           /> 
         }
-       
       {note.id.length > 3 ? 
         <>
         <button onClick={onRemove}>x</button>

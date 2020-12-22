@@ -12,7 +12,11 @@ const Search = () => {
     const onSetText = (e)=>{
     dispatch({type: 'SET_TEXT', text: e.target.value})
     }
-    
+
+    const onSortChange = (e)=>{
+      dispatch({type: 'SORT_BY', sortBy:e.target.value})
+    }
+
     useEffect(()=>{
       dispatch({type: 'SET_START_DATE', startDate: getTime(startDate)})
     },[startDate, dispatch])
@@ -47,6 +51,10 @@ const Search = () => {
           minDate={new Date()}
           isClearable
         />
+        <select onChange={onSortChange}>
+          <option value = 'date'> Date </option>
+          <option value = 'type'> Type </option>
+        </select>
       </>
   }
 

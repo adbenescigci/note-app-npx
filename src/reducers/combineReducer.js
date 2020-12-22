@@ -3,7 +3,7 @@ import notesReducer from './notes';
 import filterReducer from './filter';
 
 const initNotes = [];
-const initFilters = {text:'', date:0};
+const initFilters = {text:'', date:0 , sortBy:'date'};
 
 const [reducer, initial] = combineReducers({
   notes: [notesReducer, initNotes],

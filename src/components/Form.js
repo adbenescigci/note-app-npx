@@ -37,14 +37,16 @@ const submitForm = (e)=>{
             onChange={date => {setEndDate(); return setStartDate(date)}}
             minDate={new Date()}
             placeholderText='Start Date'
+            isClearable
         />
         <DatePicker
             selected={endDate} 
             onChange={date => {setEndDate(date)}} 
             minDate={startDate}
             placeholderText='End Date'
+            isClearable
         />
-        <button>submit</button>
+        <button disabled = {!(startDate && endDate && title && body)}>submit</button>
     </form>
 }
 

@@ -1,4 +1,4 @@
-import {useEffect, useReducer} from 'react';
+import { useEffect, useReducer } from 'react';
 import { reducer, initial } from '../reducers/combineReducer';
 import NotesContext from '../context/notes-context';
 import AddNoteForm from './AddNoteForm';
@@ -23,7 +23,6 @@ const notes = await init()
 useEffect(()=>{
   start()
 },[])
-
   return (
     <NotesContext.Provider value = {{state, dispatch}}>
       <AddNoteForm />
